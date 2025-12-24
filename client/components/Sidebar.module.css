@@ -1,0 +1,51 @@
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 1.5rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    letter-spacing: -0.05em;
+    color: var(--foreground);
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.link {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--muted-foreground);
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--foreground);
+}
+
+/* You could add active link logic via props if needed, simpler for now */
+
+.footer {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
