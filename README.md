@@ -52,3 +52,6 @@ To deploy the backend, push the `server` folder (or root with build scripts).
 Connect the `client` folder to Vercel. 
 Environment Variables needed:
 - `NEXT_PUBLIC_API_URL`: URL of your deployed backend.
+
+Deployment fix for Vercel root directory
+
