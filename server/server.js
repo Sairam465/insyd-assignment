@@ -6,14 +6,11 @@ const db = require('./database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+
 app.use(cors());
 app.use(bodyParser.json());
 
-// --- ROUTES ---
 
-// 1. Get All Items
-// Supports optional query params for filtering in the future
 app.get('/api/items', (req, res) => {
     const sql = "SELECT * FROM items ORDER BY last_updated DESC";
     db.all(sql, [], (err, rows) => {
@@ -131,6 +128,20 @@ app.get('/api/dashboard', (req, res) => {
         });
     });
 });
+
+// Root route (for Render / browser check)
+app.get("/", (req, res) => {
+  res.json({
+    status: "Backend is running",
+    service: "Insyd Assignment API"
+  });
+});
+
+// Health check route
+app.get("/health", (req, res) => {
+  res.json({ status: "OK" });
+});
+
 
 // Start Server
 app.listen(PORT, () => {
