@@ -24,7 +24,11 @@ async function getDashboardData() {
     return res.json();
   } catch (error) {
     console.error("Dashboard fetch error:", error);
-    return null;
+    return {
+  totalItems: 0,
+  totalValue: 0,
+};
+
   }
 }
 
@@ -43,7 +47,7 @@ export default async function Home() {
     return (
       <div className="container" style={{ paddingTop: '2rem' }}>
         <h1 style={{ color: 'var(--destructive)' }}>Connection Error</h1>
-        <p>Could not connect to the Backend API. Please ensure the server is running on port 5000.</p>
+        <p>Backend API is unreachable. Please try again later.</p>
         <code style={{ display: 'block', marginTop: '1rem', padding: '1rem', background: '#334155' }}>
           cd server && npm start
         </code>
