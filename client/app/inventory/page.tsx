@@ -1,48 +1,69 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-import InventoryTable from '@/components/InventoryTable';
+import { useEffect, useState } from "react";
+import InventoryTable from "@/components/InventoryTable";
 
-async function getItems() {
-    try {
-        console.log("API_URL =", process.env.NEXT_PUBLIC_API_URL);
+export default function InventoryPage() {
+  const [items, setItems] = useState<any[]>([]);
+  const [error, setError] = useState(false);
 
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  useEffect(() => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-        if (!API_URL) {
-       throw new Error("NEXT_PUBLIC_API_URL is not defined");
+    if (!API_URL) {
+      console.error("NEXT_PUBLIC_API_URL is not defined");
+      setError(true);
+      return;
     }
 
-       const res = await fetch(`${API_URL}/api/items`, {
-       cache: 'no-store',
-    });
+    fetch(`${API_URL}/api/items`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        return res.json();
+      })
+      .then((json) => setItems(json.data || []))
+      .catch((err) => {
+        console.error("getItems error:", err);
+        setError(true);
+      });
+  }, []);
 
-
-        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
-        return await res.json();
-    } catch (error) {
-        console.error("getItems error:", error);
-        return { data: [] };
-    }
-}
-
-export default async function InventoryPage() {
-    const { data: items } = await getItems();
-
+  if (error) {
     return (
-        <div className="container">
-            <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                    <h1>Inventory</h1>
-                    <p style={{ color: 'var(--muted-foreground)' }}>Manage all stock items.</p>
-                </div>
-                <a href="/add" className="btn">
-                    + Add Item
-                </a>
-            </header>
-
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                <InventoryTable initialItems={items || []} />
-            </div>
-        </div>
+      <div className="container" style={{ paddingTop: "2rem" }}>
+        <h1 style={{ color: "var(--destructive)" }}>Connection Error</h1>
+        <p>Backend API is unreachable. Please try again later.</p>
+        <code style={{ display: "block", marginTop: "1rem", padding: "1rem", background: "#334155" }}>
+          cd server && npm start
+        </code>
+      </div>
     );
+  }
+
+  return (
+    <div className="container">
+      <header
+        style={{
+          marginBottom: "2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <h1>Inventory</h1>
+          <p style={{ color: "var(--muted-foreground)" }}>
+            Manage all stock items.
+          </p>
+        </div>
+        <a href="/add" className="btn">
+          + Add Item
+        </a>
+      </header>
+
+      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+        <InventoryTable initialItems={items} />
+      </div>
+    </div>
+  );
 }

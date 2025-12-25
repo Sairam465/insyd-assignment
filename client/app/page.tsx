@@ -1,58 +1,54 @@
-export const dynamic = "force-dynamic";
+"use client";
+
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import StatCard from "@/components/StatCard";
-// other imports...
 
+export default function Home() {
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState(false);
 
-async function getDashboardData() {
-  try {
+  useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    
     if (!API_URL) {
-      throw new Error("NEXT_PUBLIC_API_URL is not defined");
+      console.error("NEXT_PUBLIC_API_URL is not defined");
+      setError(true);
+      return;
     }
 
-    const res = await fetch('$${API_URL}/api/dashboard', {
-      cache: 'no-store',
-    });
+    fetch(`${API_URL}/api/dashboard`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Fetch failed");
+        return res.json();
+      })
+      .then((json) => setData(json.data))
+      .catch((err) => {
+        console.error("Dashboard fetch error:", err);
+        setError(true);
+      });
+  }, []);
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Dashboard fetch error:", error);
-    return {
-  totalItems: 0,
-  totalValue: 0,
-};
-
-  }
-}
-
-export default async function Home() {
-  const dataResponse = await getDashboardData();
-  const data = dataResponse?.data;
-
-  // Format currency
-  const formatter = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0
+  const formatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
   });
 
-  if (!data) {
+  if (error) {
     return (
-      <div className="container" style={{ paddingTop: '2rem' }}>
-        <h1 style={{ color: 'var(--destructive)' }}>Connection Error</h1>
+      <div className="container" style={{ paddingTop: "2rem" }}>
+        <h1 style={{ color: "var(--destructive)" }}>Connection Error</h1>
         <p>Backend API is unreachable. Please try again later.</p>
-        <code style={{ display: 'block', marginTop: '1rem', padding: '1rem', background: '#334155' }}>
+        <code style={{ display: "block", marginTop: "1rem", padding: "1rem", background: "#334155" }}>
           cd server && npm start
         </code>
       </div>
     );
+  }
+
+  if (!data) {
+    return <div className="container">Loading dashboard...</div>;
   }
 
   return (
@@ -85,7 +81,7 @@ export default async function Home() {
           <h2>System Status</h2>
           <span className="badge badge-green">Operational</span>
         </div>
-        <p style={{ color: 'var(--muted-foreground)' }}>
+        <p style={{ color: "var(--muted-foreground)" }}>
           Inventory tracking is active. Real-time updates are enabled.
         </p>
       </div>
