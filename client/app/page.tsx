@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import styles from "./page.module.css";
-import Sidebar from "@/components/Sidebar";
+import StatCard from "@/components/StatCard";
 // other imports...
 
 
