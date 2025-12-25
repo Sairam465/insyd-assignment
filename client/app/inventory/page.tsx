@@ -1,3 +1,6 @@
+// FORCE CHANGE: inventory page fix
+
+
 "use client";
 
 import { useEffect, useState } from "react";
