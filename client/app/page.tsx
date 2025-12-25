@@ -1,11 +1,16 @@
-import styles from './page.module.css';
-import StatCard from '@/components/StatCard';
+export const dynamic = "force-dynamic";
 
 async function getDashboardData() {
   try {
-    const res = await fetch('http://localhost:5000/api/dashboard', {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+    
+    if (!API_URL) {
+      throw new Error("NEXT_PUBLIC_API_URL is not defined");
+    }
+
+    const res = await fetch('$${API_URL}/api/dashboard', {
       cache: 'no-store',
-      next: { revalidate: 0 }
     });
 
     if (!res.ok) {
