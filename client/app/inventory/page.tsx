@@ -2,12 +2,23 @@ import InventoryTable from '@/components/InventoryTable';
 
 async function getItems() {
     try {
-        const res = await fetch('http://localhost:5000/api/items', {
-            cache: 'no-store'
-        });
-        if (!res.ok) throw new Error('Failed to fetch');
-        return res.json();
+        console.log("API_URL =", process.env.NEXT_PUBLIC_API_URL);
+
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+        if (!API_URL) {
+       throw new Error("NEXT_PUBLIC_API_URL is not defined");
+    }
+
+       const res = await fetch(`${API_URL}/api/items`, {
+       cache: 'no-store',
+    });
+
+
+        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+        return await res.json();
     } catch (error) {
+        console.error("getItems error:", error);
         return { data: [] };
     }
 }

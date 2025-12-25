@@ -25,7 +25,8 @@ export default function InventoryTable({ initialItems }: { initialItems: Item[] 
 
         setDeleting(id);
         try {
-            await fetch(`http://localhost:5000/api/items/${id}`, { method: 'DELETE' });
+            const API_URL = process.env.NEXT_PUBLIC_API_URL;
+            await fetch(`${API_URL}/api/items/${id}`, { method: 'DELETE' });
             // Optimistic update
             setItems(items.filter(item => item.id !== id));
             router.refresh();

@@ -1,4 +1,8 @@
 export const dynamic = "force-dynamic";
+import styles from "./page.module.css";
+import Sidebar from "@/components/Sidebar";
+// other imports...
+
 
 async function getDashboardData() {
   try {
